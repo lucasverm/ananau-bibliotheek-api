@@ -22,7 +22,8 @@ namespace ananauAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [ApiConventionType(typeof(DefaultApiConventions))]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [AllowAnonymous]
     public class GebruikerController : ControllerBase
     {
         private readonly SignInManager<Gebruiker> _signInManager;

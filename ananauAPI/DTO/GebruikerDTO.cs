@@ -9,7 +9,7 @@ namespace ananauAPI.DTO
         public string Id { get; set; }
         public string Voornaam { get; set; }
         public string Achternaam { get; set; }
-        //public List<GebruikerItem> Items { get; set; }
+        public List<GebruikerItem> Items { get; set; }
         public string Email { get; set; }
         public string Foto { get; set; }
 
@@ -22,7 +22,7 @@ namespace ananauAPI.DTO
             Id = g.Id;
             Voornaam = g.Voornaam;
             Achternaam = g.Achternaam;
-            //Items = g.Items;
+            Items = g.Items;
             Email = g.Email;
             Foto = g.Foto;
         }

@@ -75,6 +75,7 @@ namespace ananauAPI.Models
 
         public Gebruiker()
         {
+            Items = new List<GebruikerItem>();
         }
 
         public Gebruiker(string voornaam, string achternaam, string email, string foto) : this()
