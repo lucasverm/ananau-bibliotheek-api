@@ -120,7 +120,7 @@ namespace ananauAPI
             app.UseMvc();
             app.UseSwaggerUi3();
             app.UseSwagger();
-            dataInitialiser.InitializeData().Wait();
+            //dataInitialiser.InitializeData().Wait();
         }
     }
 }
