@@ -15,10 +15,31 @@ namespace ananauAPI
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build().Run();
+            //BuildWebHost(args).Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>();
+
+        //public static IWebHost BuildWebHost(string[] args) =>
+        //   WebHost.CreateDefaultBuilder(args)
+        //       .ConfigureAppConfiguration((ctx, builder) =>
+        //       {
+        //           var keyVaultEndpoint = GetKeyVaultEndpoint();
+        //           if (!string.IsNullOrEmpty(keyVaultEndpoint))
+        //           {
+        //               var azureServiceTokenProvider = new AzureServiceTokenProvider();
+        //               var keyVaultClient = new KeyVaultClient(
+        //                   new KeyVaultClient.AuthenticationCallback(
+        //                       azureServiceTokenProvider.KeyVaultTokenCallback));
+        //               builder.AddAzureKeyVault(
+        //                   keyVaultEndpoint, keyVaultClient, new DefaultKeyVaultSecretManager());
+        //           }
+        //       }
+        //    ).UseStartup<Startup>()
+        //     .Build();
+
+        //private static string GetKeyVaultEndpoint() => "https://kolveniershof-0-kv.vault.azure.net";
     }
 }
