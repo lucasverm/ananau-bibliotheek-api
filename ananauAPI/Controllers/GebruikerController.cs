@@ -22,8 +22,7 @@ namespace ananauAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [ApiConventionType(typeof(DefaultApiConventions))]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [AllowAnonymous]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class GebruikerController : ControllerBase
     {
         private readonly SignInManager<Gebruiker> _signInManager;
@@ -122,7 +121,6 @@ namespace ananauAPI.Controllers
             return _gebruikerRepository.GetAll().Select(g => new GebruikerDTO(g));
         }
 
-        [AllowAnonymous]
         [HttpPut("{id}")]
         public ActionResult<Gebruiker> PutGebruiker(string id, GebruikerDTO gebruiker)
         {

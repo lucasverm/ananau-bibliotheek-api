@@ -32,6 +32,10 @@ namespace ananauAPI.Data
                 {
                     await MaakGebruiker(g, "Test123!");
                 }
+
+                Item it1 = new Item("Boek");
+                var Items = new List<Item> { it1 };
+                _dbContext.Items.AddRange(Items);
                 _dbContext.SaveChanges();
 
             }

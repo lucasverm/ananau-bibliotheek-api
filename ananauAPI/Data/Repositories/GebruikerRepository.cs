@@ -23,6 +23,12 @@ namespace ananauAPI.Data.Repositories
             _gebruikers.Add(gebruiker);
         }
 
+        public Gebruiker GetByEmail(string email)
+        {
+            return _gebruikers.Include(r => r.Items).SingleOrDefault(r => r.Email == email);
+        }
+
+
         public void Delete(Gebruiker gebruiker)
         {
             _gebruikers.Remove(gebruiker);
@@ -42,11 +48,6 @@ namespace ananauAPI.Data.Repositories
         {
             gebruiker = _gebruikers.FirstOrDefault(u => u.Email == name);
             return gebruiker != null;
-        }
-
-        public Gebruiker GetByEmail(string email)
-        {
-            return _gebruikers.Include(r => r.Items).SingleOrDefault(r => r.Email == email);
         }
 
         public void SaveChanges()

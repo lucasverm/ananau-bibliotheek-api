@@ -95,6 +95,7 @@ namespace ananauAPI
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddScoped<IGebruikerRepository, GebruikerRepository>();
+            services.AddScoped<IItemRepository, ItemRepository>();
             services.AddScoped<ApplicationDataInitialiser>();
 
             services.AddCors(options => options.AddPolicy("AllowAllOrigins", builder => builder.AllowAnyOrigin()));
@@ -120,7 +121,7 @@ namespace ananauAPI
             app.UseMvc();
             app.UseSwaggerUi3();
             app.UseSwagger();
-            //dataInitialiser.InitializeData().Wait();
+            dataInitialiser.InitializeData().Wait();
         }
     }
 }

@@ -20,6 +20,7 @@ namespace ananauAPI.Data
         {
             base.OnModelCreating(builder);
             builder.ApplyConfiguration(new GebruikerConfiguration());
+            builder.ApplyConfiguration(new ItemConfiguration());
 
         }
     }
