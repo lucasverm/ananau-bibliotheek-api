@@ -95,6 +95,7 @@ namespace ananauAPI
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddScoped<IGebruikerRepository, GebruikerRepository>();
+            services.AddScoped<IGebruikerItemRepository, GebruikerItemRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
             services.AddScoped<ApplicationDataInitialiser>();
 

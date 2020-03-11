@@ -20,10 +20,11 @@ namespace ananauAPI.Models
             }
         }
         public List<GebruikerItem> GebruikerItems { get; set; }
-
+        public Boolean Beschikbaar { get; set; }
         public Item()
         {
             GebruikerItems = new List<GebruikerItem>();
+            Beschikbaar = true;
         }
 
         public Item(string naam) : this()

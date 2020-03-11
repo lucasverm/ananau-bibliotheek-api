@@ -12,13 +12,11 @@ namespace ananauAPI.Data.Repositories
     {
         private readonly ApplicationDbContext _context;
         private readonly DbSet<Gebruiker> _gebruikers;
-        private readonly DbSet<GebruikerItem> _gebruikersItems;
 
         public GebruikerRepository(ApplicationDbContext dbContext)
         {
             _context = dbContext;
             _gebruikers = dbContext.Gebruikers;
-            _gebruikersItems = dbContext.GebruikerItems;
         }
 
         public void Add(Gebruiker gebruiker)

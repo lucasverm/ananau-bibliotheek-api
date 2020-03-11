@@ -27,11 +27,9 @@ namespace ananauAPI.Controllers
     public class ItemController : ControllerBase
     {
         private readonly IItemRepository _itemRepository;
-        private readonly IGebruikerRepository _gebruikerRepository;
-        public ItemController(IItemRepository itemRepository, IGebruikerRepository gebruikerRepository)
+        public ItemController(IItemRepository itemRepository)
         {
             _itemRepository = itemRepository;
-            _gebruikerRepository = gebruikerRepository;
         }
 
         [HttpGet("{itemId}")]
@@ -70,21 +68,21 @@ namespace ananauAPI.Controllers
             Item i = _itemRepository.GetBy(id);
 
             i.Naam = item.Naam;
-          
-      
             _itemRepository.Update(i);
             _itemRepository.SaveChanges();
             return NoContent();
         }
 
         [HttpPost]
-        public ActionResult<ItemDTO> VoegItemToe(ItemDTO itemDto)
+        public ActionResult<ItemExportDTO> VoegItemToe(ItemDTO itemDto)
         {
             Item item = new Item(itemDto.Naam);
 
             _itemRepository.Add(item);
             _itemRepository.SaveChanges();
-            return Ok();
+            return new ItemExportDTO(item);
         }
+
+        
     }
 }

@@ -50,8 +50,8 @@ namespace ananauAPI.Controllers
                 var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
                 if (result.Succeeded)
                 {
-                    string token = GetToken(user);
-                    return Created("", new { token, user }); //returns only the token                   
+                    string token = "Bearer " + GetToken(user);
+                    return Created("", new { token, user });            
                 }
             }
             return BadRequest();

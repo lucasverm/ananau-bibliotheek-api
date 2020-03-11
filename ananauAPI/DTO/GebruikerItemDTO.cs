@@ -6,22 +6,23 @@ namespace ananauAPI.DTO
     public class GebruikerItemDTO
     {
         public string Id { get; set; }
-        public string itemId { get; set; }
-        public string itemNaam { get; set; }
-        public string gebruikerId { get; set; }
-        public string gebruikerVoornaam { get; set; }
-        public GebruikerItemDTO()
-        {
+        public string ItemId { get; set; }
+        public string ItemNaam { get; set; }
+        public string GebruikerId { get; set; }
+        public string GebruikerVoornaam { get; set; }
+        public DateTime OntleendOp { get; set; }
+        public DateTime TerugOp { get; set; }
 
-        }
-
+        public GebruikerItemDTO(){}
         public GebruikerItemDTO(GebruikerItem gi)
         {
             Id = gi.Id;
-            itemId = gi.Item.Id;
-            itemNaam = gi.Item.Naam;
-            gebruikerId = gi.Gebruiker.Id;
-            gebruikerVoornaam = gi.Gebruiker.Voornaam;
+            ItemId = gi.Item.Id;
+            ItemNaam = gi.Item.Naam;
+            GebruikerId = gi.Gebruiker.Id;
+            GebruikerVoornaam = gi.Gebruiker.Voornaam;
+            OntleendOp = gi.OntleendOp;
+            TerugOp = gi.TerugOp;
         }
     }
 }

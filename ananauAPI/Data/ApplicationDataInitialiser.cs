@@ -26,22 +26,24 @@ namespace ananauAPI.Data
             if (_dbContext.Database.EnsureCreated())
             
                 {
-                Gebruiker lucas = new Gebruiker("lucas", "vermeulen","lucasvermeulen@gmail.com","testFoto");
-                var gebruikers = new List<Gebruiker> { lucas };
+                //Gebruiker lucas = new Gebruiker("lucas", "vermeulen", "lucasvermeulen@gmail.com", "stringFoto");
+
+                Gebruiker stringUser = new Gebruiker("string", "string", "user@example.com", "testFoto");
+                var gebruikers = new List<Gebruiker> { stringUser };
                 foreach (Gebruiker g in gebruikers)
                 {
-                    await MaakGebruiker(g, "Test123!");
+                    await MaakGebruiker(g, "string");
                 }
 
                 Item it1 = new Item("Boek");
                 _dbContext.Items.Add(it1);
                 _dbContext.SaveChanges();
 
-                GebruikerItem gi = new GebruikerItem(lucas, it1);
+               // GebruikerItem gi = new GebruikerItem(lucas, it1);
 
-                _dbContext.GebruikerItems.Add(gi);
-                lucas.GebruikerItems.Add(gi);
-                it1.GebruikerItems.Add(gi);
+                //_dbContext.GebruikerItems.Add(gi);
+                //lucas.GebruikerItems.Add(gi);
+                //it1.GebruikerItems.Add(gi);
 
                 _dbContext.SaveChanges();
             }

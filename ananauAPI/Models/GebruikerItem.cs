@@ -8,13 +8,18 @@ namespace ananauAPI.Models
         public string Id { get; set; }
         public Gebruiker Gebruiker { get; set; }
         public Item Item { get; set; }
+        public DateTime OntleendOp{ get; set; }
+        public DateTime TerugOp { get; set; }
 
-        public GebruikerItem(){}
-
-        public GebruikerItem(Gebruiker g, Item i)
+        public GebruikerItem()
+        {
+            OntleendOp = DateTime.Now;
+        }
+        public GebruikerItem(Gebruiker g, Item i):this()
         {
             Gebruiker = g;
             Item = i;
+
         }
 
     }
