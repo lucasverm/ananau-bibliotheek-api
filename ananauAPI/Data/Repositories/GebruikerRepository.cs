@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ananauAPI.DTO;
 using ananauAPI.Models;
 using ananauAPI.Models.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
@@ -11,11 +12,13 @@ namespace ananauAPI.Data.Repositories
     {
         private readonly ApplicationDbContext _context;
         private readonly DbSet<Gebruiker> _gebruikers;
+        private readonly DbSet<GebruikerItem> _gebruikersItems;
 
         public GebruikerRepository(ApplicationDbContext dbContext)
         {
             _context = dbContext;
             _gebruikers = dbContext.Gebruikers;
+            _gebruikersItems = dbContext.GebruikerItems;
         }
 
         public void Add(Gebruiker gebruiker)
@@ -25,7 +28,7 @@ namespace ananauAPI.Data.Repositories
 
         public Gebruiker GetByEmail(string email)
         {
-            return _gebruikers.Include(r => r.Items).SingleOrDefault(r => r.Email == email);
+            return _gebruikers.Include(t => t.GebruikerItems).ThenInclude(a => a.Gebruiker).Include(a => a.GebruikerItems).ThenInclude(a => a.Item).SingleOrDefault(r => r.Email == email);
         }
 
 
@@ -36,12 +39,13 @@ namespace ananauAPI.Data.Repositories
 
         public IEnumerable<Gebruiker> GetAll()
         {
-            return _gebruikers.ToList();
+            return _gebruikers.Include(t => t.GebruikerItems).ThenInclude(a => a.Gebruiker).Include(a => a.GebruikerItems).ThenInclude(a => a.Item).ToList();
+             
         }
 
         public Gebruiker GetBy(string id)
         {
-            return _gebruikers.Include(r => r.Items).SingleOrDefault(r => r.Id == id);
+            return _gebruikers.Include(t => t.GebruikerItems).ThenInclude(a => a.Gebruiker).Include(a => a.GebruikerItems).ThenInclude(a => a.Item).SingleOrDefault(r => r.Id == id);
         }
 
         public bool TryGetGebruiker(string name, out Gebruiker gebruiker)

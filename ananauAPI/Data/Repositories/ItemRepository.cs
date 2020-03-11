@@ -30,12 +30,12 @@ namespace ananauAPI.Data.Repositories
 
         public IEnumerable<Item> GetAll()
         {
-            return _Items.ToList();
+            return _Items.Include(r => r.GebruikerItems).ThenInclude(r => r.Gebruiker).Include(r => r.GebruikerItems).ThenInclude(r => r.Item).ToList();
         }
 
         public Item GetBy(string id)
         {
-            return _Items.Include(r => r.Gebruikers).SingleOrDefault(r => r.Id == id);
+            return _Items.Include(r => r.GebruikerItems).ThenInclude(r => r.Gebruiker).Include(r => r.GebruikerItems).ThenInclude(r => r.Item).SingleOrDefault(r => r.Id == id);
         }
 
         public void SaveChanges()

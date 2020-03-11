@@ -96,11 +96,11 @@ namespace ananauAPI.Controllers
         }
 
         [HttpGet("{gebruikerId}")]
-        public ActionResult<GebruikerDTO> GetGebruikerId(string gebruikerId)
+        public ActionResult<GebruikerExportDTO> GetGebruikerId(string gebruikerId)
         {
             Gebruiker g = _gebruikerRepository.GetBy(gebruikerId);
             if (g == null) return NotFound();
-            return new GebruikerDTO(g);
+            return new GebruikerExportDTO(g);
         }
 
         [HttpDelete("{id}")]
@@ -117,9 +117,9 @@ namespace ananauAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<GebruikerDTO> GetGebruikers()
+        public IEnumerable<GebruikerExportDTO> GetGebruikers()
         {
-            return _gebruikerRepository.GetAll().Select(g => new GebruikerDTO(g));
+            return _gebruikerRepository.GetAll().Select(g => new GebruikerExportDTO(g));
         }
 
         [HttpPut("{id}")]

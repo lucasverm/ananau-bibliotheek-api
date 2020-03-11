@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <Folder Include="DTO\" />
+    <Folder Include="DTO\Export\" />
   </ItemGroup>
   <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 

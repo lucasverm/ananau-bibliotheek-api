@@ -71,11 +71,11 @@ namespace ananauAPI.Models
                 _foto = value;
             }
         }
-        public List<GebruikerItem> Items { get; set; }
+        public List<GebruikerItem> GebruikerItems { get; set; }
 
         public Gebruiker()
         {
-            Items = new List<GebruikerItem>();
+            GebruikerItems = new List<GebruikerItem>();
         }
 
         public Gebruiker(string voornaam, string achternaam, string email, string foto) : this()

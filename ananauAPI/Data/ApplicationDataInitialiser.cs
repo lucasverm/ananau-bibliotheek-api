@@ -34,14 +34,15 @@ namespace ananauAPI.Data
                 }
 
                 Item it1 = new Item("Boek");
-                var Items = new List<Item> { it1 };
-                _dbContext.Items.AddRange(Items);
-
-
+                _dbContext.Items.Add(it1);
                 _dbContext.SaveChanges();
 
                 GebruikerItem gi = new GebruikerItem(lucas, it1);
+
                 _dbContext.GebruikerItems.Add(gi);
+                lucas.GebruikerItems.Add(gi);
+                it1.GebruikerItems.Add(gi);
+
                 _dbContext.SaveChanges();
             }
 

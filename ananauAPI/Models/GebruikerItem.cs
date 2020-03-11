@@ -6,20 +6,16 @@ namespace ananauAPI.Models
     public class GebruikerItem
     {
         public string Id { get; set; }
-        [JsonIgnore]
-        public Item Item { get; set; }
         public Gebruiker Gebruiker { get; set; }
+        public Item Item { get; set; }
 
-        protected GebruikerItem()
+        public GebruikerItem(){}
+
+        public GebruikerItem(Gebruiker g, Item i)
         {
-
+            Gebruiker = g;
+            Item = i;
         }
 
-        public GebruikerItem(Gebruiker gebruiker, Item item)
-        {
-            Gebruiker = gebruiker;
-            Item = item;
-            Id = gebruiker.Id;
-        }
     }
 }

@@ -19,10 +19,11 @@ namespace ananauAPI.Models
                 _naam = value;
             }
         }
-        public List<GebruikerItem> Gebruikers { get; set; }
+        public List<GebruikerItem> GebruikerItems { get; set; }
 
         public Item()
         {
+            GebruikerItems = new List<GebruikerItem>();
         }
 
         public Item(string naam) : this()

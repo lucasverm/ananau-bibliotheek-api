@@ -35,11 +35,11 @@ namespace ananauAPI.Controllers
         }
 
         [HttpGet("{itemId}")]
-        public ActionResult<ItemDTO> GetItemById(string itemId)
+        public ActionResult<ItemExportDTO> GetItemById(string itemId)
         {
             Item i = _itemRepository.GetBy(itemId);
             if (i == null) return NotFound();
-            return new ItemDTO(i);
+            return new ItemExportDTO(i);
         }
 
         [HttpDelete("{id}")]
@@ -56,9 +56,9 @@ namespace ananauAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<ItemDTO> GetItems()
+        public IEnumerable<ItemExportDTO> GetItems()
         {
-            return _itemRepository.GetAll().Select(g => new ItemDTO(g));
+            return _itemRepository.GetAll().Select(g => new ItemExportDTO(g));
         }
 
         [HttpPut("{id}")]

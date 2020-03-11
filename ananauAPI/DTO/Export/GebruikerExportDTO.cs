@@ -5,29 +5,28 @@ using ananauAPI.Models;
 
 namespace ananauAPI.DTO
 {
-    public class GebruikerDTO
+    public class GebruikerExportDTO
     {
         public string Id { get; set; }
         public string Voornaam { get; set; }
         public string Achternaam { get; set; }
-        public List<GebruikerItem> GebruikerItems { get; set; }
+        public List<GebruikerItemDTO> GebruikerItems { get; set; }
         public string Email { get; set; }
         public string Foto { get; set; }
 
-        public GebruikerDTO()
+        public GebruikerExportDTO()
         {
         }
 
-        public GebruikerDTO(Gebruiker g)
+        public GebruikerExportDTO(Gebruiker g)
         {
             Id = g.Id;
             Voornaam = g.Voornaam;
             Achternaam = g.Achternaam;
-            GebruikerItems = g.GebruikerItems;
+            GebruikerItems = g.GebruikerItems.Select(t => new GebruikerItemDTO(t)).ToList();
             Email = g.Email;
             Foto = g.Foto;
         }
 
-        
     }
 }

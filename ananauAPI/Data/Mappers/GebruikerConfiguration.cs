@@ -12,7 +12,7 @@ namespace ananauAPI.Data.Mappers
             builder.Property(g => g.Achternaam).IsRequired();
             builder.Property(g => g.Voornaam).IsRequired();
             builder.Property(g => g.Email).IsRequired();
-            builder.HasMany(g => g.Items).WithOne().OnDelete(DeleteBehavior.Cascade);
+            //builder.HasMany(g => g.GebruikerItems).WithOne().OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
