@@ -95,7 +95,6 @@ namespace ananauAPI.Controllers
             if (result.Succeeded)
             {
                 _gebruikerRepository.SaveChanges();
-                string token = GetToken(g, claims);
 
                 var host = Request.Host;
                 return Created($"https://{host}/api/account/{g.Id}", g);

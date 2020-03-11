@@ -31,18 +31,11 @@ namespace ananauAPI.Controllers
         }
 
         [Authorize(Policy = "User")]
-        [AllowAnonymous]
         [HttpPost("scan")]
         public ActionResult<GebruikerItemDTO> ScanItem(string itemId)
         {
-            GebruikerItem gi;
-            Console.WriteLine("----------------------------------------------------------------------");
-            Console.WriteLine("Naam: " + User.Identity.Name);
-            Console.WriteLine("----------------------------------------------------------------------");
+            GebruikerItem gi;    
             Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail(User.Identity.Name);
-
-
-            //Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail("user@example.com");
             if (huidigeGebruiker == null) return NotFound("Gebruiker niet gevonden!");
             var item = _itemRepository.GetBy(itemId);
             if (item == null) return NotFound("Item niet gevonden!");
@@ -66,6 +59,15 @@ namespace ananauAPI.Controllers
             _itemRepository.Update(item);
             _itemRepository.SaveChanges();
             return new GebruikerItemDTO(gi);
+        }
+
+        [Authorize(Policy = "User")]
+        [HttpGet("GetOntleendeBoekenVanGebruiker")]
+        public ActionResult<List<ItemExportDTO>> GetOntleendeBoekenVanGebruiker()
+        {
+            Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail(User.Identity.Name);
+            if (huidigeGebruiker == null) return NotFound("Gebruiker niet gevonden!");
+            return huidigeGebruiker.GebruikerItems.Where(t => t.TerugOp == new DateTime()).Select(t => new ItemExportDTO(t.Item)).ToList();
         }
     }
 }
