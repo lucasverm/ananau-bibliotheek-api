@@ -7,6 +7,7 @@ using ananauAPI.Models;
 using ananauAPI.Models.RepositoryInterfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -19,25 +20,31 @@ namespace ananauAPI.Controllers
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class OntleenController : Controller
     {
+        private readonly UserManager<Gebruiker> _userManager;
         private readonly IItemRepository _itemRepository;
         private readonly IGebruikerRepository _gebruikerRepository;
         private readonly IGebruikerItemRepository _gebruikerItemRepository;
-        public OntleenController(IItemRepository itemRepository, IGebruikerRepository gebruikerRepository, IGebruikerItemRepository gebruikerItemRepository)
+        public OntleenController(IItemRepository itemRepository, UserManager<Gebruiker> userManager, IGebruikerRepository gebruikerRepository, IGebruikerItemRepository gebruikerItemRepository)
         {
             _itemRepository = itemRepository;
             _gebruikerRepository = gebruikerRepository;
             _gebruikerItemRepository = gebruikerItemRepository;
+            _userManager = userManager;
         }
 
-        // POST api/values
         [HttpPost]
         public ActionResult<GebruikerItemDTO> ScanItem(string itemId)
         {
             GebruikerItem gi;
-            //Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail(User.Identity.Name);
-            Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail("user@example.com");
-            if (huidigeGebruiker == null) BadRequest("Gebruiker niet gevonden!");
+            Console.WriteLine("------------------------------------------------------");
+            Console.WriteLine(HttpContext.User.Identity.Name);
+            Console.WriteLine("------------------------------------------------------");
+            Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail(User.Identity.Name);
+
+            //Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail("user@example.com");
+            if (huidigeGebruiker == null) return NotFound("Gebruiker niet gevonden!");
             var item = _itemRepository.GetBy(itemId);
+            if (item == null) return NotFound("Item niet gevonden!");
             if (item.Beschikbaar)
             {
                 gi = new GebruikerItem(huidigeGebruiker, item);
