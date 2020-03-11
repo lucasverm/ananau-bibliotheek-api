@@ -48,23 +48,28 @@ namespace ananauAPI.Controllers
             if (user != null)
             {
                 var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+                var claims = await _signInManager.UserManager.GetClaimsAsync(user);
                 if (result.Succeeded)
                 {
-                    string token = "Bearer " + GetToken(user);
-                    return Created("", new { token, user });            
+                    string token = "Bearer " + GetToken(user, claims);
+                    return Created("", new { token, user }); //returns only the token                   
                 }
             }
             return BadRequest();
         }
 
-        private string GetToken(Gebruiker g)
+        private string GetToken(Gebruiker g, IList<Claim> claims)
         {      // Createthetoken
-         
-         
+            var claimarray = new[] {
+                new Claim(JwtRegisteredClaimNames.Sub, g.Email),
+                new Claim(JwtRegisteredClaimNames.UniqueName, g.UserName)};
+            claims.Add(new Claim(JwtRegisteredClaimNames.Sub, g.Email));
+            claims.Add(new Claim(JwtRegisteredClaimNames.UniqueName, g.UserName));
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(null, null,
-                null,
+                claims,
                 expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: creds);
             return new JwtSecurityTokenHandler().WriteToken(token);
@@ -84,10 +89,13 @@ namespace ananauAPI.Controllers
             };
 
             var result = await _userManager.CreateAsync(g, model.Password);
+            await _userManager.AddClaimAsync(g, new Claim(ClaimTypes.Role, "User"));
+
+            var claims = await _signInManager.UserManager.GetClaimsAsync(g);
             if (result.Succeeded)
             {
                 _gebruikerRepository.SaveChanges();
-                string token = GetToken(g);
+                string token = GetToken(g, claims);
 
                 var host = Request.Host;
                 return Created($"https://{host}/api/account/{g.Id}", g);

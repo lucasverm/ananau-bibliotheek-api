@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Claims;
 using System.Text;
 using ananauAPI.Data;
 using ananauAPI.Data.Repositories;
@@ -27,19 +28,21 @@ namespace ananauAPI
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("AnanauContext"));
             });
+
+            services.AddSession();
+
             services.AddOpenApiDocument(c =>
             {
                 c.DocumentName = "apidocs";
-                c.Title = "Ananau API";
+                c.Title = "Kolveniershof API";
                 c.Version = "v1";
-                c.Description = "The Ananau API documentation description.";
+                c.Description = "The Kolveniershof API documentation description.";
                 c.DocumentProcessors.Add(new SecurityDefinitionAppender("JWT Token", new SwaggerSecurityScheme
                 {
                     Type = SwaggerSecuritySchemeType.ApiKey,
@@ -50,6 +53,7 @@ namespace ananauAPI
                 c.OperationProcessors.Add(new OperationSecurityScopeProcessor("JWT Token"));
             }); //for OpenAPI 3.0 else AddSwaggerDocument();
 
+            //no UI will be added (<-> AddDefaultIdentity)
             services.AddIdentity<Gebruiker, IdentityRole>(cfg => cfg.User.RequireUniqueEmail = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -92,30 +96,39 @@ namespace ananauAPI
                 options.User.RequireUniqueEmail = true;
             });
 
+            services.AddSignalR();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("User", policy => policy.RequireClaim(ClaimTypes.Role, "User"));
+            });
+
+
             services.AddScoped<IGebruikerRepository, GebruikerRepository>();
-            services.AddScoped<IGebruikerItemRepository, GebruikerItemRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
+            services.AddScoped<IGebruikerItemRepository, GebruikerItemRepository>();
             services.AddScoped<ApplicationDataInitialiser>();
 
             services.AddCors(options => options.AddPolicy("AllowAllOrigins", builder => builder.AllowAnyOrigin()));
+
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDataInitialiser dataInitialiser)
         {
-            if (env.IsDevelopment())
+            if (true || env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
             else
             {
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            
+            app.UseStaticFiles();
             app.UseCors("AllowAllOrigins");
             app.UseAuthentication();
             app.UseHttpsRedirection();

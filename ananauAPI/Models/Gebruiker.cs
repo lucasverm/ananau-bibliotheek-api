@@ -13,6 +13,7 @@ namespace ananauAPI.Models
         private string _email;
         private string _foto;
         override public string Id { get; set; }
+        public IdentityUserClaim<string> Role { get; set; }
         public string Voornaam
         {
             get

@@ -17,29 +17,30 @@ namespace ananauAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [ApiConventionType(typeof(DefaultApiConventions))]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class OntleenController : Controller
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public class OntleenController : ControllerBase
     {
-        private readonly UserManager<Gebruiker> _userManager;
         private readonly IItemRepository _itemRepository;
         private readonly IGebruikerRepository _gebruikerRepository;
         private readonly IGebruikerItemRepository _gebruikerItemRepository;
-        public OntleenController(IItemRepository itemRepository, UserManager<Gebruiker> userManager, IGebruikerRepository gebruikerRepository, IGebruikerItemRepository gebruikerItemRepository)
+        public OntleenController(IItemRepository itemRepository, IGebruikerRepository gebruikerRepository, IGebruikerItemRepository gebruikerItemRepository)
         {
             _itemRepository = itemRepository;
             _gebruikerRepository = gebruikerRepository;
             _gebruikerItemRepository = gebruikerItemRepository;
-            _userManager = userManager;
         }
 
-        [HttpPost]
+        [Authorize(Policy = "User")]
+        [AllowAnonymous]
+        [HttpPost("scan")]
         public ActionResult<GebruikerItemDTO> ScanItem(string itemId)
         {
             GebruikerItem gi;
-            Console.WriteLine("------------------------------------------------------");
-            Console.WriteLine(HttpContext.User.Identity.Name);
-            Console.WriteLine("------------------------------------------------------");
+            Console.WriteLine("----------------------------------------------------------------------");
+            Console.WriteLine("Naam: " + User.Identity.Name);
+            Console.WriteLine("----------------------------------------------------------------------");
             Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail(User.Identity.Name);
+
 
             //Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail("user@example.com");
             if (huidigeGebruiker == null) return NotFound("Gebruiker niet gevonden!");

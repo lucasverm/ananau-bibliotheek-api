@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using ananauAPI.Models;
 using Microsoft.AspNetCore.Identity;
@@ -53,6 +54,8 @@ namespace ananauAPI.Data
         private async Task MaakGebruiker(Gebruiker gebruiker, string password)
         {
             await _userManager.CreateAsync(gebruiker, password);
+            await _userManager.AddClaimAsync(gebruiker, new Claim(ClaimTypes.Role, "User"));
+            _dbContext.SaveChanges();
         }
     }
 }
