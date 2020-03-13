@@ -40,11 +40,11 @@ namespace ananauAPI.Data
                 _dbContext.Items.Add(it1);
                 _dbContext.SaveChanges();
 
-               // GebruikerItem gi = new GebruikerItem(lucas, it1);
+                GebruikerItem gi = new GebruikerItem(stringUser, it1);
 
-                //_dbContext.GebruikerItems.Add(gi);
-                //lucas.GebruikerItems.Add(gi);
-                //it1.GebruikerItems.Add(gi);
+                _dbContext.GebruikerItems.Add(gi);
+                stringUser.GebruikerItems.Add(gi);
+               it1.GebruikerItems.Add(gi);
 
                 _dbContext.SaveChanges();
             }

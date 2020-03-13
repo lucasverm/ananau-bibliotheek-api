@@ -14,6 +14,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using NSwag;
 using NSwag.SwaggerGeneration.Processors.Security;
 
@@ -97,7 +99,10 @@ namespace ananauAPI
             });
 
             services.AddSignalR();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(options => {
+                options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            }); ;
 
             services.AddAuthorization(options =>
             {
@@ -110,7 +115,12 @@ namespace ananauAPI
             services.AddScoped<IGebruikerItemRepository, GebruikerItemRepository>();
             services.AddScoped<ApplicationDataInitialiser>();
 
-            services.AddCors(options => options.AddPolicy("AllowAllOrigins", builder => builder.AllowAnyOrigin()));
+            services.AddCors(options => 
+                options.AddPolicy("AllowAllOrigins", builder =>
+                    builder.AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                     ));
 
 
         }
@@ -128,8 +138,8 @@ namespace ananauAPI
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseStaticFiles();
             app.UseCors("AllowAllOrigins");
+            app.UseStaticFiles();
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();

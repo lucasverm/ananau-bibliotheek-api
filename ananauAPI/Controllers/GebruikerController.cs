@@ -51,7 +51,7 @@ namespace ananauAPI.Controllers
                 var claims = await _signInManager.UserManager.GetClaimsAsync(user);
                 if (result.Succeeded)
                 {
-                    string token = "Bearer " + GetToken(user, claims);
+                    string token = GetToken(user, claims);
                     return Created("", new { token, user }); //returns only the token                   
                 }
             }

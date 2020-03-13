@@ -26,7 +26,7 @@ namespace ananauAPI.Data.Repositories
 
         public Gebruiker GetByEmail(string email)
         {
-            return _gebruikers.Include(t => t.GebruikerItems).ThenInclude(a => a.Gebruiker).Include(a => a.GebruikerItems).ThenInclude(a => a.Item).SingleOrDefault(r => r.Email == email);
+            return _gebruikers.Include(a => a.GebruikerItems).ThenInclude(a => a.Item).SingleOrDefault(r => r.Email == email);
         }
 
 
@@ -37,13 +37,13 @@ namespace ananauAPI.Data.Repositories
 
         public IEnumerable<Gebruiker> GetAll()
         {
-            return _gebruikers.Include(t => t.GebruikerItems).ThenInclude(a => a.Gebruiker).Include(a => a.GebruikerItems).ThenInclude(a => a.Item).ToList();
+            return _gebruikers.Include(a => a.GebruikerItems).ThenInclude(a => a.Item).ToList();
              
         }
 
         public Gebruiker GetBy(string id)
         {
-            return _gebruikers.Include(t => t.GebruikerItems).ThenInclude(a => a.Gebruiker).Include(a => a.GebruikerItems).ThenInclude(a => a.Item).SingleOrDefault(r => r.Id == id);
+            return _gebruikers.Include(a => a.GebruikerItems).ThenInclude(a => a.Item).SingleOrDefault(r => r.Id == id);
         }
 
         public bool TryGetGebruiker(string name, out Gebruiker gebruiker)

@@ -17,7 +17,8 @@ namespace ananauAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [ApiConventionType(typeof(DefaultApiConventions))]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [AllowAnonymous]
     public class OntleenController : ControllerBase
     {
         private readonly IItemRepository _itemRepository;
@@ -63,11 +64,12 @@ namespace ananauAPI.Controllers
 
         [Authorize(Policy = "User")]
         [HttpGet("GetOntleendeBoekenVanGebruiker")]
-        public ActionResult<List<ItemExportDTO>> GetOntleendeBoekenVanGebruiker()
+        public ActionResult<List<GebruikerItem>> GetOntleendeBoekenVanGebruiker()
         {
-            Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail(User.Identity.Name);
+            //Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail(User.Identity.Name);
+            Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail("user@example.com");
             if (huidigeGebruiker == null) return NotFound("Gebruiker niet gevonden!");
-            return huidigeGebruiker.GebruikerItems.Where(t => t.TerugOp == new DateTime()).Select(t => new ItemExportDTO(t.Item)).ToList();
+            return huidigeGebruiker.GebruikerItems.Where(t => t.TerugOp == new DateTime()).ToList();
         }
     }
 }
