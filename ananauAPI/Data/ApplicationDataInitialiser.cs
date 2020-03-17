@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ananauAPI.Models;
@@ -35,17 +36,31 @@ namespace ananauAPI.Data
                 {
                     await MaakGebruiker(g, "string");
                 }
-
-                Item it1 = new Item("Boek");
-                _dbContext.Items.Add(it1);
+                List<Item> items = new List<Item>();
+                for (int i = 0; i < 100; i++)
+                {
+                    Item it1 = new Item(i.ToString());
+                    items.Add(it1);
+                }
+                _dbContext.Items.AddRange(items);
                 _dbContext.SaveChanges();
 
-                GebruikerItem gi = new GebruikerItem(stringUser, it1);
-
-                _dbContext.GebruikerItems.Add(gi);
-                stringUser.GebruikerItems.Add(gi);
-               it1.GebruikerItems.Add(gi);
-
+                List<GebruikerItem> gebruikerItems = new List<GebruikerItem>();
+                foreach (var item in items.Select((value, i) => new { i, value }))
+                {
+                    GebruikerItem gi = new GebruikerItem(stringUser, item.value);
+                    gi.OntleendOp.AddMonths(item.i);
+                    if (item.i%2 == 0)
+                    {
+                        gi.TerugOp = DateTime.Now;
+                    }
+                    
+                    gebruikerItems.Add(gi);
+                    _dbContext.GebruikerItems.Add(gi);
+                    stringUser.GebruikerItems.Add(gi);
+                    item.value.GebruikerItems.Add(gi);
+                }
+               
                 _dbContext.SaveChanges();
             }
 

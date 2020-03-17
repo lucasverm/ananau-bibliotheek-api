@@ -43,8 +43,7 @@ namespace ananauAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> CreateToken(LoginDTO model)
         {
-            var user = await _userManager.FindByNameAsync(model.Email);
-
+            var user = _gebruikerRepository.GetByEmail(model.Email);
             if (user != null)
             {
                 var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
