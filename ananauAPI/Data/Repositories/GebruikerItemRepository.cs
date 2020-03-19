@@ -51,7 +51,7 @@ namespace ananauAPI.Data.Repositories
 
         public GebruikerItem vindOpenStaandeLeningMetItemId(string id)
         {
-            return _gebruikerItems.Include(t => t.Gebruiker).Include(t => t.Item).SingleOrDefault(r => r.Item.Id == id && r.TerugOp == new DateTime());
+            return _gebruikerItems.Include(t => t.Gebruiker).Include(t => t.Item).SingleOrDefault(r => r.Item.Id == id && r.TerugOp == null);
         }
     }
 }

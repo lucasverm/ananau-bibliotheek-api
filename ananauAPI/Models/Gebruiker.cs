@@ -11,8 +11,8 @@ namespace ananauAPI.Models
         private string _voornaam;
         private string _achternaam;
         private string _email;
-        private string _foto;
         override public string Id { get; set; }
+        public string TelefoonNummer { get; set; }
         public IdentityUserClaim<string> Role { get; set; }
         public string Voornaam
         {
@@ -58,20 +58,6 @@ namespace ananauAPI.Models
                 _email = value;
             }
         }
-
-        public string Foto
-        {
-            get
-            {
-                return _foto;
-            }
-            set
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException("Een gebruiker moet een foto hebben");
-                _foto = value;
-            }
-        }
         public List<GebruikerItem> GebruikerItems { get; set; }
 
         public Gebruiker()
@@ -79,12 +65,11 @@ namespace ananauAPI.Models
             GebruikerItems = new List<GebruikerItem>();
         }
 
-        public Gebruiker(string voornaam, string achternaam, string email, string foto) : this()
+        public Gebruiker(string voornaam, string achternaam, string email) : this()
         {
             Voornaam = voornaam;
             Achternaam = achternaam;
             Email = email;
-            Foto = foto;
             UserName = email;
         }
     }

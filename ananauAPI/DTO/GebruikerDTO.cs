@@ -12,7 +12,7 @@ namespace ananauAPI.DTO
         public string Achternaam { get; set; }
         public List<GebruikerItem> GebruikerItems { get; set; }
         public string Email { get; set; }
-        public string Foto { get; set; }
+        public string TelefoonNummer { get; set; }
 
         public GebruikerDTO()
         {
@@ -25,7 +25,7 @@ namespace ananauAPI.DTO
             Achternaam = g.Achternaam;
             GebruikerItems = g.GebruikerItems;
             Email = g.Email;
-            Foto = g.Foto;
+            TelefoonNummer = g.TelefoonNummer;
         }
 
         

@@ -10,8 +10,10 @@ namespace ananauAPI.DTO
         public string ItemNaam { get; set; }
         public string GebruikerId { get; set; }
         public string GebruikerVoornaam { get; set; }
+        public string GebruikerAchternaam { get; set; }
         public DateTime OntleendOp { get; set; }
-        public DateTime TerugOp { get; set; }
+        public DateTime?
+            TerugOp { get; set; }
 
         public GebruikerItemDTO(){}
         public GebruikerItemDTO(GebruikerItem gi)
@@ -21,6 +23,7 @@ namespace ananauAPI.DTO
             ItemNaam = gi.Item.Naam;
             GebruikerId = gi.Gebruiker.Id;
             GebruikerVoornaam = gi.Gebruiker.Voornaam;
+            GebruikerAchternaam = gi.Gebruiker.Achternaam;
             OntleendOp = gi.OntleendOp;
             TerugOp = gi.TerugOp;
         }

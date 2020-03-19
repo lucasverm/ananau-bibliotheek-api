@@ -40,6 +40,14 @@ namespace ananauAPI.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet("checkusername")]
+        public async Task<ActionResult<Boolean>> CheckAvailableUserName(string email)
+        {
+            var user = await _userManager.FindByNameAsync(email);
+            return user == null;
+        }
+
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult<string>> CreateToken(LoginDTO model)
         {
@@ -53,8 +61,15 @@ namespace ananauAPI.Controllers
                     string token = GetToken(user, claims);
                     return Created("", new { token, user }); //returns only the token                   
                 }
+                else
+                {
+                    return BadRequest("Dit wachtwoord is onjuist.");
+                }
             }
-            return BadRequest();
+            else
+            {
+                return BadRequest("Dit email adres is onjuist.");
+            }
         }
 
         private string GetToken(Gebruiker g, IList<Claim> claims)
@@ -78,25 +93,24 @@ namespace ananauAPI.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<string>> Register(RegisterDTO model)
         {
-            Gebruiker g = new Gebruiker
+            Gebruiker user = new Gebruiker
             {
                 Email = model.Email,
                 Voornaam = model.Voornaam,
                 Achternaam = model.Achternaam,
-                Foto = model.Foto,
-                UserName = model.Email
+                UserName = model.Email,
+                TelefoonNummer = model.TelefoonNummer
             };
 
-            var result = await _userManager.CreateAsync(g, model.Password);
-            await _userManager.AddClaimAsync(g, new Claim(ClaimTypes.Role, "User"));
-
-            var claims = await _signInManager.UserManager.GetClaimsAsync(g);
+            var result = await _userManager.CreateAsync(user, model.Password);
+            await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "User"));
+            var claims = await _signInManager.UserManager.GetClaimsAsync(user);
             if (result.Succeeded)
             {
                 _gebruikerRepository.SaveChanges();
 
-                var host = Request.Host;
-                return Created($"https://{host}/api/account/{g.Id}", g);
+                string token = GetToken(user, claims);
+                return Created("", new { token, user });
             }
             return BadRequest();
         }
@@ -139,7 +153,7 @@ namespace ananauAPI.Controllers
             g.Achternaam = gebruiker.Achternaam;
             g.Voornaam = gebruiker.Voornaam;
             g.Email = gebruiker.Email;
-            g.Foto = gebruiker.Foto;
+            g.TelefoonNummer = gebruiker.TelefoonNummer;
        
             _gebruikerRepository.Update(g);
             _gebruikerRepository.SaveChanges();

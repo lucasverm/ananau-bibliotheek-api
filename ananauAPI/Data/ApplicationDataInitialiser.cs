@@ -30,7 +30,7 @@ namespace ananauAPI.Data
                 {
                 //Gebruiker lucas = new Gebruiker("lucas", "vermeulen", "lucasvermeulen@gmail.com", "stringFoto");
 
-                Gebruiker stringUser = new Gebruiker("string", "string", "user@example.com", "testFoto");
+                Gebruiker stringUser = new Gebruiker("string", "string", "user@example.com");
                 var gebruikers = new List<Gebruiker> { stringUser };
                 foreach (Gebruiker g in gebruikers)
                 {
@@ -40,6 +40,10 @@ namespace ananauAPI.Data
                 for (int i = 0; i < 100; i++)
                 {
                     Item it1 = new Item(i.ToString());
+                    if (i % 2 != 0)
+                    {
+                        it1.Beschikbaar = false;
+                    }
                     items.Add(it1);
                 }
                 _dbContext.Items.AddRange(items);

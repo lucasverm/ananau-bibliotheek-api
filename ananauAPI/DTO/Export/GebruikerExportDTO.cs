@@ -12,7 +12,6 @@ namespace ananauAPI.DTO
         public string Achternaam { get; set; }
         public List<GebruikerItemDTO> GebruikerItems { get; set; }
         public string Email { get; set; }
-        public string Foto { get; set; }
 
         public GebruikerExportDTO()
         {
@@ -25,7 +24,6 @@ namespace ananauAPI.DTO
             Achternaam = g.Achternaam;
             GebruikerItems = g.GebruikerItems.Select(t => new GebruikerItemDTO(t)).ToList();
             Email = g.Email;
-            Foto = g.Foto;
         }
 
     }
