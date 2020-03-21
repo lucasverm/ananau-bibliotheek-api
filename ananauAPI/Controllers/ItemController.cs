@@ -32,12 +32,21 @@ namespace ananauAPI.Controllers
             _itemRepository = itemRepository;
         }
 
-        [HttpGet("{itemId}")]
+        [HttpGet("byId/{itemId}")]
         public ActionResult<ItemExportDTO> GetItemById(string itemId)
         {
             Item i = _itemRepository.GetBy(itemId);
-            if (i == null) return NotFound();
+            if (i == null) return NotFound("Het item met opgegeven id kon niet worden gevonden.");
             return new ItemExportDTO(i);
+        }
+
+        [HttpGet("byName/{itemNaam}")]
+        public ActionResult<List<ItemExportDTO>> GetItemByName(string itemNaam)
+        {
+            List<Item> items = _itemRepository.GetByName(itemNaam).ToList();
+            List<ItemExportDTO> uitvoer = items.Select(i => new ItemExportDTO(i)).ToList();
+            if(uitvoer.Count == 0) return NotFound("Er werd geen enkel item gevonden die dit woord bevat.");
+            return uitvoer;
         }
 
         [HttpDelete("{id}")]
@@ -46,7 +55,7 @@ namespace ananauAPI.Controllers
             Item g = _itemRepository.GetBy(id);
             if (g == null)
             {
-                return NotFound();
+                return NotFound("Het item met opgegeven id kon niet worden gevonden.");
             }
             _itemRepository.Delete(g);
             _itemRepository.SaveChanges();
@@ -76,6 +85,8 @@ namespace ananauAPI.Controllers
         [HttpPost]
         public ActionResult<ItemExportDTO> VoegItemToe(ItemDTO itemDto)
         {
+
+            if (_itemRepository.GetByName(itemDto.Naam) != null) return BadRequest("Er betaat al een item met deze naam! Geef een andere naam op!");
             Item item = new Item(itemDto.Naam);
 
             _itemRepository.Add(item);

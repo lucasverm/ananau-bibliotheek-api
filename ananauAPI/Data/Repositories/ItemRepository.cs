@@ -38,6 +38,11 @@ namespace ananauAPI.Data.Repositories
             return _Items.Include(r => r.GebruikerItems).ThenInclude(r => r.Gebruiker).Include(r => r.GebruikerItems).ThenInclude(r => r.Item).SingleOrDefault(r => r.Id == id);
         }
 
+        public IEnumerable<Item> GetByName(string naam)
+        {
+            return _Items.Include(r => r.GebruikerItems).ThenInclude(r => r.Gebruiker).Include(r => r.GebruikerItems).ThenInclude(r => r.Item).Where(r => r.Naam.Contains(naam));
+        }
+
         public void SaveChanges()
         {
             _context.SaveChanges();

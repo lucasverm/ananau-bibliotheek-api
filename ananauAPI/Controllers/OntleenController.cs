@@ -33,13 +33,13 @@ namespace ananauAPI.Controllers
 
         [Authorize(Policy = "User")]
         [HttpPost("scan")]
-        public ActionResult<GebruikerItemDTO> ScanItem(string itemId)
+        public ActionResult<GebruikerItem> ScanItem(string id)
         {
             GebruikerItem gi;
-            //Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail(User.Identity.Name);
-            Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail("user@example.com");
+            Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail(User.Identity.Name);
+            //Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail("user@example.com");
             if (huidigeGebruiker == null) return NotFound("Gebruiker niet gevonden!");
-            var item = _itemRepository.GetBy(itemId);
+            var item = _itemRepository.GetBy(id);
             if (item == null) return NotFound("Item niet gevonden!");
             if (item.Beschikbaar)
             {
@@ -52,7 +52,7 @@ namespace ananauAPI.Controllers
             }
             else
             {
-                gi = _gebruikerItemRepository.vindOpenStaandeLeningMetItemId(itemId);
+                gi = _gebruikerItemRepository.vindOpenStaandeLeningMetItemId(id);
                 if (gi == null)
                     return NotFound();
                 gi.TerugOp = DateTime.Now;
@@ -61,15 +61,15 @@ namespace ananauAPI.Controllers
             item.Beschikbaar = !item.Beschikbaar;
             _itemRepository.Update(item);
             _itemRepository.SaveChanges();
-            return new GebruikerItemDTO(gi);
+            return gi;
         }
 
         [Authorize(Policy = "User")]
         [HttpGet("GetOntleendeBoekenVanGebruiker")]
         public ActionResult<GebruikerItemsLijstExportDTO> GetOntleendeBoekenVanGebruiker(int vanaf, int hoeveelheid)
         {
-            //Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail(User.Identity.Name);
-            Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail("user@example.com");
+            Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail(User.Identity.Name);
+            //Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail("user@example.com");
             if (huidigeGebruiker == null) return NotFound("Gebruiker niet gevonden!");
             List<GebruikerItem> items = huidigeGebruiker.GebruikerItems.Where(t => t.TerugOp == null).OrderBy(t => t.OntleendOp).Skip(vanaf - 1).Take(hoeveelheid).ToList();
             int totaal = huidigeGebruiker.GebruikerItems.Where(t => t.TerugOp == null).Count();
@@ -80,8 +80,8 @@ namespace ananauAPI.Controllers
         [HttpGet("GetOntleenHistorieVanGebruiker")]
         public ActionResult<GebruikerItemsLijstExportDTO> GetOntleenHistorieVanGebruiker(int vanaf, int hoeveelheid)
         {
-            //Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail(User.Identity.Name);
-            Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail("user@example.com");
+            Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail(User.Identity.Name);
+            //Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail("user@example.com");
             if (huidigeGebruiker == null) return NotFound("Gebruiker niet gevonden!");
             List<GebruikerItem> items = huidigeGebruiker.GebruikerItems.OrderByDescending(t => t.OntleendOp).Skip(vanaf - 1).Take(hoeveelheid).ToList();
             int totaal = huidigeGebruiker.GebruikerItems.Count();

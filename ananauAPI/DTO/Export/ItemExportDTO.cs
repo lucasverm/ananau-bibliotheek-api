@@ -10,7 +10,7 @@ namespace ananauAPI.DTO
     {
         public string Id { get; set; }
         public string Naam { get; set; }
-        public List<GebruikerItemDTO> GebruikerItems { get; set; }
+        public List<GebruikerItem> GebruikerItems { get; set; }
         public Boolean Beschikbaar { get; set; }
 
         public ItemExportDTO(){}
@@ -18,7 +18,8 @@ namespace ananauAPI.DTO
         {
             Id = i.Id;
             Naam = i.Naam;
-            GebruikerItems = i.GebruikerItems.Select(t => new GebruikerItemDTO(t)).ToList();
+            //GebruikerItems = i.GebruikerItems.Select(t => new GebruikerItemDTO(t)).ToList();
+            GebruikerItems = i.GebruikerItems;
             Beschikbaar = i.Beschikbaar;
         }
     }
