@@ -22,8 +22,8 @@ namespace ananauAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [ApiConventionType(typeof(DefaultApiConventions))]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [AllowAnonymous]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[AllowAnonymous]
     public class GebruikerController : ControllerBase
     {
         private readonly SignInManager<Gebruiker> _signInManager;
@@ -68,7 +68,8 @@ namespace ananauAPI.Controllers
             }
             else
             {
-                return BadRequest("Dit email adres is onjuist.");
+                return BadRequest("Dit ema" +
+                    "il adres is onjuist.");
             }
         }
 
@@ -77,6 +78,7 @@ namespace ananauAPI.Controllers
             var claimarray = new[] {
                 new Claim(JwtRegisteredClaimNames.Sub, g.Email),
                 new Claim(JwtRegisteredClaimNames.UniqueName, g.UserName)};
+
             claims.Add(new Claim(JwtRegisteredClaimNames.Sub, g.Email));
             claims.Add(new Claim(JwtRegisteredClaimNames.UniqueName, g.UserName));
 
@@ -99,7 +101,8 @@ namespace ananauAPI.Controllers
                 Voornaam = model.Voornaam,
                 Achternaam = model.Achternaam,
                 UserName = model.Email,
-                TelefoonNummer = model.TelefoonNummer
+                TelefoonNummer = model.TelefoonNummer,
+                GeboorteDatum = model.GeboorteDatum
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -116,11 +119,11 @@ namespace ananauAPI.Controllers
         }
 
         [HttpGet("{gebruikerId}")]
-        public ActionResult<GebruikerExportDTO> GetGebruikerId(string gebruikerId)
+        public ActionResult<Gebruiker> GetGebruikerId(string gebruikerId)
         {
             Gebruiker g = _gebruikerRepository.GetBy(gebruikerId);
             if (g == null) return NotFound();
-            return new GebruikerExportDTO(g);
+            return g;
         }
 
         [HttpDelete("{id}")]
@@ -137,27 +140,29 @@ namespace ananauAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<GebruikerExportDTO> GetGebruikers()
+        public IEnumerable<Gebruiker> GetGebruikers()
         {
-            return _gebruikerRepository.GetAll().Select(g => new GebruikerExportDTO(g));
+            return _gebruikerRepository.GetAll();
         }
 
         [HttpPut("{id}")]
-        public ActionResult<Gebruiker> PutGebruiker(string id, GebruikerDTO gebruiker)
+        public async Task<ActionResult<Gebruiker>> PutGebruikerAsync(string id, UpdateGebruikerDTO gebruiker)
         {
             if (!gebruiker.Id.Equals(id))
                 return BadRequest();
-
             Gebruiker g = _gebruikerRepository.GetBy(id);
-
             g.Achternaam = gebruiker.Achternaam;
             g.Voornaam = gebruiker.Voornaam;
+            var user = await _userManager.FindByEmailAsync(g.Email);
+            user.UserName = gebruiker.Email;
+            user.Email = gebruiker.Email;
+            await _userManager.UpdateAsync(user);
             g.Email = gebruiker.Email;
             g.TelefoonNummer = gebruiker.TelefoonNummer;
-       
+            g.GeboorteDatum = gebruiker.GeboorteDatum;
             _gebruikerRepository.Update(g);
             _gebruikerRepository.SaveChanges();
-            return NoContent();
+            return g;
         }
     }
 }

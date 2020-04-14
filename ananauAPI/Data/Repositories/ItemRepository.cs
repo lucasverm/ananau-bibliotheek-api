@@ -11,11 +11,13 @@ namespace ananauAPI.Data.Repositories
     {
         private readonly ApplicationDbContext _context;
         private readonly DbSet<Item> _Items;
+        private readonly DbSet<GebruikerItem> _GebruikerItems;
 
         public ItemRepository(ApplicationDbContext dbContext)
         {
             _context = dbContext;
             _Items = dbContext.Items;
+            _GebruikerItems = dbContext.GebruikerItems;
         }
 
         public void Add(Item Item)
@@ -25,6 +27,7 @@ namespace ananauAPI.Data.Repositories
 
         public void Delete(Item Item)
         {
+            _GebruikerItems.RemoveRange(_GebruikerItems.Where(t => t.Item.Id == Item.Id).ToList());
             _Items.Remove(Item);
         }
 
@@ -38,9 +41,14 @@ namespace ananauAPI.Data.Repositories
             return _Items.Include(r => r.GebruikerItems).ThenInclude(r => r.Gebruiker).Include(r => r.GebruikerItems).ThenInclude(r => r.Item).SingleOrDefault(r => r.Id == id);
         }
 
-        public IEnumerable<Item> GetByName(string naam)
+        public IEnumerable<Item> GetByContainsName(string naam)
         {
-            return _Items.Include(r => r.GebruikerItems).ThenInclude(r => r.Gebruiker).Include(r => r.GebruikerItems).ThenInclude(r => r.Item).Where(r => r.Naam.Contains(naam));
+            return _Items.Include(r => r.GebruikerItems).ThenInclude(r => r.Gebruiker).Include(r => r.GebruikerItems).ThenInclude(r => r.Item).Where(r => r.Naam.ToLower().Contains(naam.ToLower()) && r.Gearchiveerd == false);
+        }
+
+        public Item GetByName(string naam)
+        {
+            return _Items.Include(r => r.GebruikerItems).ThenInclude(r => r.Gebruiker).Include(r => r.GebruikerItems).ThenInclude(r => r.Item).SingleOrDefault(r => r.Naam.ToLower() == naam.ToLower());
         }
 
         public void SaveChanges()

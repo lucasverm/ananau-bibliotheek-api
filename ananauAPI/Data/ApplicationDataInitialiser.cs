@@ -25,12 +25,13 @@ namespace ananauAPI.Data
 
 
             _dbContext.Database.EnsureDeleted();
+
             if (_dbContext.Database.EnsureCreated())
             
                 {
                 //Gebruiker lucas = new Gebruiker("lucas", "vermeulen", "lucasvermeulen@gmail.com", "stringFoto");
 
-                Gebruiker stringUser = new Gebruiker("string", "string", "user@example.com");
+                Gebruiker stringUser = new Gebruiker("string", "string", "user@example.com", new DateTime(1998,5,26), "+32495102770");
                 var gebruikers = new List<Gebruiker> { stringUser };
                 foreach (Gebruiker g in gebruikers)
                 {

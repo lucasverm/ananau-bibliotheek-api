@@ -8,10 +8,14 @@ namespace ananauAPI.DTO
     public class ItemDTO
     {
         public string Id { get; set; }
-
         [Required(ErrorMessage = "Naam is verplicht!")]
         public string Naam { get; set; }
-
+        public Boolean Gearchiveerd { get; set; }
+        public string Materiaal { get; set; }
+        public string Merk { get; set; }
+        public DateTime AankoopDatum { get; set; }
+        public string Inhoud { get; set; }
+        public ItemCategorie Categorie { get; set; }
         public ItemDTO()
         {
         }

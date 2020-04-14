@@ -22,8 +22,8 @@ namespace ananauAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [ApiConventionType(typeof(DefaultApiConventions))]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [AllowAnonymous]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[AllowAnonymous]
     public class ItemController : ControllerBase
     {
         private readonly IItemRepository _itemRepository;
@@ -33,20 +33,27 @@ namespace ananauAPI.Controllers
         }
 
         [HttpGet("byId/{itemId}")]
-        public ActionResult<ItemExportDTO> GetItemById(string itemId)
+        public ActionResult<Item> GetItemById(string itemId)
         {
             Item i = _itemRepository.GetBy(itemId);
             if (i == null) return NotFound("Het item met opgegeven id kon niet worden gevonden.");
-            return new ItemExportDTO(i);
+            return i;
         }
 
-        [HttpGet("byName/{itemNaam}")]
-        public ActionResult<List<ItemExportDTO>> GetItemByName(string itemNaam)
+        [HttpGet("byName/{naam}")]
+        public ActionResult<Item> GetItemByName(string naam)
         {
-            List<Item> items = _itemRepository.GetByName(itemNaam).ToList();
-            List<ItemExportDTO> uitvoer = items.Select(i => new ItemExportDTO(i)).ToList();
-            if(uitvoer.Count == 0) return NotFound("Er werd geen enkel item gevonden die dit woord bevat.");
-            return uitvoer;
+            Item i = _itemRepository.GetByName(naam);
+            if (i == null) return BadRequest("Het item met opgegeven naam kon niet worden gevonden.");
+            return i;
+        }
+
+        [HttpGet("byContainsName/{itemNaam}")]
+        public ActionResult<List<Item>> GetItemByContainsName(string itemNaam)
+        {
+            List<Item> items = _itemRepository.GetByContainsName(itemNaam).ToList();
+            if(items.Count == 0) return NotFound("Er werd geen enkel item gevonden die dit woord bevat.");
+            return items;
         }
 
         [HttpDelete("{id}")]
@@ -62,36 +69,140 @@ namespace ananauAPI.Controllers
             return g;
         }
 
-        [HttpGet]
-        public IEnumerable<ItemExportDTO> GetItems()
+        [HttpGet("getAll")]
+        public IEnumerable<Item> GetItems()
         {
-            return _itemRepository.GetAll().Select(g => new ItemExportDTO(g));
+            return _itemRepository.GetAll();
+        }
+
+
+        [HttpPost("getAllWithFilter")]
+        public ActionResult<FilterItemsExportDTO> GetItemsWithFilter(filterItemsDTO filter)
+        {
+            var items = _itemRepository.GetAll().OrderBy(t => t.Naam).ToList();
+            if (filter.NaamSorterenASC && filter.NaamSorterenDESC &&
+                filter.BeschikbaarSorterenASC && filter.BeschikbaarSorterenDESC &&
+                filter.ToegevoegdOpSorterenASC && filter.ToegevoegdOpSorterenDESC
+                )
+            {
+                return BadRequest("Er kan maar op 1 item tergelijk worden gefilterd!");
+            }
+
+            if (filter.NaamSorterenDESC)
+            {
+                items = items.OrderByDescending(t => t.Naam).ToList();
+            }
+            else if (filter.NaamSorterenASC)
+            {
+                items = items.OrderBy(t => t.Naam).ToList();
+            }
+            else if (filter.BeschikbaarSorterenDESC)
+            {
+                items = items.OrderByDescending(t => t.Beschikbaar).ToList();
+            }
+            else if (filter.BeschikbaarSorterenASC)
+            {
+                items = items.OrderBy(t => t.Beschikbaar).ToList();
+            }
+            else if (filter.ToegevoegdOpSorterenDESC)
+            {
+                items = items.OrderByDescending(t => t.ToegevoegdOp).ToList();
+            }
+            else if (filter.ToegevoegdOpSorterenASC)
+            {
+                items = items.OrderBy(t => t.ToegevoegdOp).ToList();
+            }
+
+            if (filter.ItemFilter != "")
+            {
+                items = items.Where(t => t.Naam.ToLower().Contains(filter.ItemFilter.ToLower())).ToList();
+            }
+
+            if (filter.BeschikbaarFilter == "ja")
+            {
+                items = items.Where(t => t.Beschikbaar == true).ToList();
+            }
+            else if (filter.BeschikbaarFilter == "nee")
+            {
+                items = items.Where(t => t.Beschikbaar == false).ToList();
+            }
+
+            if (filter.Gearchiveerd == true)
+            {
+                items = items.Where(t => t.Gearchiveerd == true).ToList();
+            }
+            else if(filter.Gearchiveerd == false)
+            {
+                items = items.Where(t => t.Gearchiveerd == false).ToList();
+            }
+
+            if (filter.CategorieFilter != "-1")
+            {
+                items = items.Where(t => t.Categorie.GetHashCode().ToString() == filter.CategorieFilter).ToList();
+            }
+            
+
+            int aantalItems = items.Count;
+            items = items.Skip(filter.itemsVanaf).Take(filter.aantalItems).ToList();
+
+            return new FilterItemsExportDTO(items, aantalItems);
         }
 
         [HttpPut("{id}")]
-        public ActionResult<Item> PutGebruiker(string id, ItemDTO item)
+        public ActionResult<Item> PutItem(string id, ItemDTO item)
         {
             if (!item.Id.Equals(id))
-                return BadRequest();
+            {
+               return BadRequest("id's komen niet overeen!");
+            }
 
             Item i = _itemRepository.GetBy(id);
+            if(i.Naam != item.Naam)
+            {
+                if(_itemRepository.GetByName(item.Naam) != null)
+                {
+                    return BadRequest("Er bestaat al een item met deze naam: kies een andere naam!");
+                }
 
+            } 
             i.Naam = item.Naam;
+            if (item.Gearchiveerd)
+            {
+                if (i.Beschikbaar)
+                {
+                    i.Gearchiveerd = item.Gearchiveerd;
+                }
+                else
+                {
+                    return BadRequest("Items die uitgeleend zijn kunnen niet gearchiveerd worden!");
+                }
+            }
+            else
+            {
+                i.Gearchiveerd = item.Gearchiveerd;
+            }
+     
             _itemRepository.Update(i);
             _itemRepository.SaveChanges();
-            return NoContent();
+            return i;
         }
 
         [HttpPost]
-        public ActionResult<ItemExportDTO> VoegItemToe(ItemDTO itemDto)
+        public ActionResult<Item> VoegItemToe(ItemDTO itemDto)
         {
-
-            if (_itemRepository.GetByName(itemDto.Naam) != null) return BadRequest("Er betaat al een item met deze naam! Geef een andere naam op!");
+            if (_itemRepository.GetByName(itemDto.Naam) != null)
+            {
+                return BadRequest("Er betaat al een item met deze naam! Geef een andere naam op!");
+            }
             Item item = new Item(itemDto.Naam);
-
+            item.Materiaal = itemDto.Materiaal;
+            item.Merk = itemDto.Merk;
+            item.AankoopDatum = itemDto.AankoopDatum;
+                item.Inhoud = itemDto.Inhoud;
+            item.Categorie = itemDto.Categorie;
             _itemRepository.Add(item);
             _itemRepository.SaveChanges();
-            return new ItemExportDTO(item);
+            return item;
         }
 
         

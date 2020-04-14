@@ -13,6 +13,7 @@ namespace ananauAPI.Models
         private string _email;
         override public string Id { get; set; }
         public string TelefoonNummer { get; set; }
+        public DateTime GeboorteDatum { get; set; }
         public IdentityUserClaim<string> Role { get; set; }
         public string Voornaam
         {
@@ -65,12 +66,14 @@ namespace ananauAPI.Models
             GebruikerItems = new List<GebruikerItem>();
         }
 
-        public Gebruiker(string voornaam, string achternaam, string email) : this()
+        public Gebruiker(string voornaam, string achternaam, string email, DateTime geboorteDatum, string telefoonNummer) : this()
         {
             Voornaam = voornaam;
             Achternaam = achternaam;
             Email = email;
             UserName = email;
+            GeboorteDatum = geboorteDatum;
+            TelefoonNummer = telefoonNummer;
         }
     }
 }

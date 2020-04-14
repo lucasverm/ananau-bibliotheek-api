@@ -11,7 +11,6 @@ namespace ananauAPI.Data.Mappers
         {
 
             builder.Property(g => g.Naam).IsRequired();
-            //builder.HasMany(g => g.GebruikerItems).WithOne().OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
