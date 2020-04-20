@@ -10,6 +10,7 @@ namespace ananauAPI.Data
         public DbSet<Item> Items { get; set; }
         public DbSet<Gebruiker> Gebruikers { get; set; }
         public DbSet<GebruikerItem> GebruikerItems { get; set; }
+        public DbSet<Applicatie> Applicaties { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

@@ -113,6 +113,7 @@ namespace ananauAPI
             services.AddScoped<IGebruikerRepository, GebruikerRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
             services.AddScoped<IGebruikerItemRepository, GebruikerItemRepository>();
+            services.AddScoped<IApplicatieRepository, ApplicatieRepository>();
             services.AddScoped<ApplicationDataInitialiser>();
 
             services.AddCors(options => 
