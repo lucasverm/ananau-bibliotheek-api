@@ -33,6 +33,11 @@ namespace ananauAPI.Models
         public String VerwachtingenVrijwilliger { get; set; }
         public String Voorstellen { get; set; }
         public int HuidigeStap { get; set; }
+        public DateTime PeriodeStageVan { get; set; }
+        public DateTime PeriodeStageTot { get; set; }
+        public DateTime PeriodeVerblijfVan { get; set; }
+        public DateTime PeriodeVerblijfTot { get; set; }
+        public String AantalWekenSpaans { get; set; }
         public Applicatie()
         {
             HuidigeStap = 1;
@@ -66,7 +71,12 @@ namespace ananauAPI.Models
             VerwachtingenVrijwilliger = applicatieDTO.VerwachtingenVrijwilliger;
             Voorstellen = applicatieDTO.Voorstellen;
             HuidigeStap = applicatieDTO.HuidigeStap == 0 ? 1 : applicatieDTO.HuidigeStap;
-        }
+            PeriodeStageVan = applicatieDTO.PeriodeStageVan;
+            PeriodeStageTot = applicatieDTO.PeriodeStageTot;
+            PeriodeVerblijfVan = applicatieDTO.PeriodeVerblijfVan;
+            PeriodeVerblijfTot = applicatieDTO.PeriodeVerblijfTot;
+            AantalWekenSpaans = applicatieDTO.AantalWekenSpaans;
+    }
 
 
         public Applicatie(ApplicatieDTO applicatieDTO) :this()

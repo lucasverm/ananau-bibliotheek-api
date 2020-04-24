@@ -31,6 +31,12 @@ namespace ananauAPI.DTO
         public String VerwachtingenVrijwilliger { get; set; }
         public String Voorstellen { get; set; }
         public int HuidigeStap { get; set; }
+        public DateTime PeriodeStageVan { get; set; }
+        public DateTime PeriodeStageTot { get; set; }
+        public DateTime PeriodeVerblijfVan { get; set; }
+        public DateTime PeriodeVerblijfTot { get; set; }
+        public String AantalWekenSpaans { get; set; }
+
         public ApplicatieDTO()
         {
         }
