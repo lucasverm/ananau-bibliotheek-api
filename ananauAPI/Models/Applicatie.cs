@@ -38,6 +38,10 @@ namespace ananauAPI.Models
         public DateTime PeriodeVerblijfVan { get; set; }
         public DateTime PeriodeVerblijfTot { get; set; }
         public String AantalWekenSpaans { get; set; }
+        public String ReispaspoortNaam { get; set; }
+        public String attestNaam { get; set; }
+        public String diplomaNaam { get; set; }
+        public Boolean PeriodeBevestigd { get; set; }
         public Applicatie()
         {
             HuidigeStap = 1;
@@ -76,11 +80,13 @@ namespace ananauAPI.Models
             PeriodeVerblijfVan = applicatieDTO.PeriodeVerblijfVan;
             PeriodeVerblijfTot = applicatieDTO.PeriodeVerblijfTot;
             AantalWekenSpaans = applicatieDTO.AantalWekenSpaans;
+            PeriodeBevestigd = applicatieDTO.PeriodeBevestigd;
     }
 
 
         public Applicatie(ApplicatieDTO applicatieDTO) :this()
         {
+            this.PeriodeBevestigd = false;
             this.UpdateDezeApplicatie(applicatieDTO);
         }
     }
