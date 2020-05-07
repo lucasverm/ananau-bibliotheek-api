@@ -42,6 +42,9 @@ namespace ananauAPI.Models
         public String attestNaam { get; set; }
         public String diplomaNaam { get; set; }
         public Boolean PeriodeBevestigd { get; set; }
+        public String WelkeWeg { get; set; }
+        public String VragenAanOns { get; set; }
+        public String Motivatie { get; set; }
         public Applicatie()
         {
             HuidigeStap = 1;
@@ -81,7 +84,10 @@ namespace ananauAPI.Models
             PeriodeVerblijfTot = applicatieDTO.PeriodeVerblijfTot;
             AantalWekenSpaans = applicatieDTO.AantalWekenSpaans;
             PeriodeBevestigd = applicatieDTO.PeriodeBevestigd;
-    }
+            WelkeWeg = applicatieDTO.WelkeWeg;
+            VragenAanOns = applicatieDTO.VragenAanOns;
+            Motivatie = applicatieDTO.Motivatie;
+        }
 
 
         public Applicatie(ApplicatieDTO applicatieDTO) :this()

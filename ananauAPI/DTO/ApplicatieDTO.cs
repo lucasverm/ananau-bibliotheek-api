@@ -37,6 +37,9 @@ namespace ananauAPI.DTO
         public DateTime PeriodeVerblijfTot { get; set; }
         public String AantalWekenSpaans { get; set; }
         public Boolean PeriodeBevestigd { get; set; }
+        public String WelkeWeg { get; set; }
+        public String VragenAanOns { get; set; }
+        public String Motivatie { get; set; }
 
         public ApplicatieDTO()
         {
