@@ -32,95 +32,99 @@ namespace ananauAPI.Controllers
 
         }
 
-        [HttpPost]
-        public Task<ActionResult> UploadBestand(List<BestandDTO> bestanden)
+        [HttpGet(folder]
+
+        [HttpPost("{folder}/{bestandNaam}")]
+        public async Task<ActionResult> UploadBestand(string folder, string bestandNaam, [FromForm(Name = "bestand")]IFormFile bestand)
         {
-            string req = null;
-            bestanden.ForEach(async bestand =>
-           {
-               Applicatie applicatie = _applicatieRepository.GetBy(bestand.applicatieId);
-               if (applicatie == null) req = "De applicatie bestaat niet!";
-               if (bestand.bestandNaam.Contains("reispaspoort"))
-               {
-                   applicatie.ReispaspoortNaam = bestand.bestandNaam;
-               }
-               else if (bestand.bestandNaam.Contains("attest"))
-               {
-                   applicatie.attestNaam = bestand.bestandNaam;
-               }
-               else if (bestand.bestandNaam.Contains("diploma"))
-               {
-                   applicatie.diplomaNaam = bestand.bestandNaam;
-               }
-               else
-               {
-                   BadRequest("De bestandsnaam is niet correct!");
-               }
-               _applicatieRepository.Update(applicatie);
-               _applicatieRepository.SaveChanges();
-               if (!aanvaardeBestandExtenties.Contains(bestand.bestand.ContentType))
-               {
-                   req = "Extentie niet correct!";
-               }
-               var folderPad = Path.Combine(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), bestand.folder);
-               if (!Directory.Exists(folderPad))
-               {
-                   Directory.CreateDirectory(folderPad);
-               }
-               var bestandPad = Path.Combine(folderPad, bestand.bestandNaam);
-               if (System.IO.File.Exists(bestandPad))
-               {
-                   System.IO.File.Delete(bestandPad);
-               }
-               using (var fileStream = new FileStream(bestandPad, FileMode.Create))
-               {
-                   await bestand.bestand.CopyToAsync(fileStream);
-               }
-           });
-            if (req != null)
+            if (!aanvaardeBestandExtenties.Contains(bestand.ContentType))
             {
-                //return BadRequest(req);
+                return BadRequest();
             }
-            else
+            var folderPad = Path.Combine(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), folder);
+            string naam = "";
+            DirectoryInfo d = new DirectoryInfo(Path.Combine(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), folder));
+            FileInfo[] Files = null;
+            if (Directory.Exists(folderPad))
             {
-                //return NoContent();
+                if (bestandNaam.Contains("reispaspoort"))
+                {
+                    Files = d.GetFiles("reispaspoort*"); //Getting Text files
+                }
+                else if (bestandNaam.Contains("attest"))
+                {
+                    Files = d.GetFiles("attest*");
+                }
+                else if (bestandNaam.Contains("diploma"))
+                {
+                    Files = d.GetFiles("diploma*");
+                }
+                
+                foreach (FileInfo file in Files)
+                {
+                    naam = file.Name;
+                }
             }
-            return null;
+            
+            var deletePath = Path.Combine(folderPad, naam);
+            if (System.IO.File.Exists(deletePath))
+            {
+                System.IO.File.Delete(deletePath);
+            }
+
+
+
+            if (!Directory.Exists(folderPad))
+            {
+                Directory.CreateDirectory(folderPad);
+            }
+            var bestandPad = Path.Combine(folderPad, bestandNaam);
+            using (var fileStream = new FileStream(bestandPad, FileMode.Create))
+            {
+                await bestand.CopyToAsync(fileStream);
+            }
+            return Ok();
         }
 
         [HttpGet("{applicatieId}/{folder}/{bestandNaam}")]
         public IActionResult Get(string applicatieId, string folder, string bestandNaam)
         {
+            bestandNaam = bestandNaam.ToLower();
             Applicatie applicatie = _applicatieRepository.GetBy(applicatieId);
             if (applicatie == null) return BadRequest("De applicatie bestaat niet!");
+
+            DirectoryInfo d = new DirectoryInfo(Path.Combine(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), folder));
+            FileInfo[] Files = null;
             if (bestandNaam.Contains("reispaspoort"))
             {
-                bestandNaam = applicatie.ReispaspoortNaam;
+                Files = d.GetFiles("reispaspoort*"); //Getting Text files
             }
             else if (bestandNaam.Contains("attest"))
             {
-                bestandNaam = applicatie.attestNaam;
+                Files = d.GetFiles("attest*");
             }
             else if (bestandNaam.Contains("diploma"))
             {
-                bestandNaam = applicatie.diplomaNaam;
+                Files = d.GetFiles("diploma*");
             }
-            else
+            string naam = "";
+            foreach (FileInfo file in Files)
             {
-                BadRequest("De bestandsnaam is niet correct!");
+                naam = file.Name;
             }
+
             Byte[] b;
             var folderPad = Path.Combine(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), folder);
             if (!Directory.Exists(folderPad))
             {
                 return NoContent();
             }
-            var bestandPad = Path.Combine(folderPad, bestandNaam);
+            var bestandPad = Path.Combine(folderPad, naam);
             if (!System.IO.File.Exists(bestandPad))
             {
                 return NoContent();
             }
-            new FileExtensionContentTypeProvider().TryGetContentType(bestandNaam, out string contentType);
+            new FileExtensionContentTypeProvider().TryGetContentType(naam, out string contentType);
             b = System.IO.File.ReadAllBytes(bestandPad);
             return File(b, contentType);
         }

@@ -12,7 +12,7 @@ namespace ananauAPI.DTO
         public String Bus { get; set; }
         public String Gemeente { get; set; }
         public String Postcode { get; set; }
-        public DateTime GeboorteDatum { get; set; }
+        public DateTime? GeboorteDatum { get; set; }
         public String GeboortePlaats { get; set; }
         public String Nationaliteit { get; set; }
         public String PaspoortNummer { get; set; }
@@ -31,14 +31,14 @@ namespace ananauAPI.DTO
         public String VerwachtingenVrijwilliger { get; set; }
         public String Voorstellen { get; set; }
         public int HuidigeStap { get; set; }
-        public DateTime PeriodeStageVan { get; set; }
-        public DateTime PeriodeStageTot { get; set; }
-        public DateTime PeriodeVerblijfVan { get; set; }
-        public DateTime PeriodeVerblijfTot { get; set; }
+        public DateTime? PeriodeStageVan { get; set; }
+        public DateTime? PeriodeStageTot { get; set; }
+        public DateTime? PeriodeVerblijfVan { get; set; }
+        public DateTime? PeriodeVerblijfTot { get; set; }
         public String AantalWekenSpaans { get; set; }
         public Boolean PeriodeBevestigd { get; set; }
         public String WelkeWeg { get; set; }
-        public String VragenAanOns { get; set; }
+        public String Vragen { get; set; }
         public String Motivatie { get; set; }
 
         public ApplicatieDTO()
