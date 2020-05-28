@@ -37,9 +37,9 @@ namespace ananauAPI.Controllers
             GebruikerItem gi;
             Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail(User.Identity.Name);
             //Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail("user@example.com");
-            if (huidigeGebruiker == null) return NotFound("Gebruiker niet gevonden!");
+            if (huidigeGebruiker == null) return NotFound("gebruikerMetIdNietGevonden");
             var item = _itemRepository.GetBy(id);
-            if (item == null) return NotFound("Item niet gevonden!");
+            if (item == null) return NotFound("itemMetIdNietGevonden");
             if (item.Beschikbaar)
             {
                 gi = new GebruikerItem(huidigeGebruiker, item);
@@ -69,7 +69,7 @@ namespace ananauAPI.Controllers
         {
             Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail(User.Identity.Name);
             //Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail("user@example.com");
-            if (huidigeGebruiker == null) return NotFound("Gebruiker niet gevonden!");
+            if (huidigeGebruiker == null) return NotFound("gebruikerMetIdNietGevonden");
             List<GebruikerItem> items = huidigeGebruiker.GebruikerItems.Where(t => t.TerugOp == null).OrderBy(t => t.OntleendOp).Skip(vanaf - 1).Take(hoeveelheid).ToList();
             int totaal = huidigeGebruiker.GebruikerItems.Where(t => t.TerugOp == null).Count();
             return new GebruikerItemsLijstExportDTO(items, totaal);
@@ -81,7 +81,7 @@ namespace ananauAPI.Controllers
         {
             Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail(User.Identity.Name);
             //Gebruiker huidigeGebruiker = _gebruikerRepository.GetByEmail("user@example.com");
-            if (huidigeGebruiker == null) return NotFound("Gebruiker niet gevonden!");
+            if (huidigeGebruiker == null) return NotFound("gebruikerMetIdNietGevonden");
             List<GebruikerItem> items = huidigeGebruiker.GebruikerItems.OrderByDescending(t => t.OntleendOp).Skip(vanaf - 1).Take(hoeveelheid).ToList();
             int totaal = huidigeGebruiker.GebruikerItems.Count();
             return new GebruikerItemsLijstExportDTO(items, totaal);

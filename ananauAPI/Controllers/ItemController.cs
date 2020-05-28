@@ -36,7 +36,7 @@ namespace ananauAPI.Controllers
         public ActionResult<Item> GetItemById(string itemId)
         {
             Item i = _itemRepository.GetBy(itemId);
-            if (i == null) return NotFound("Het item met opgegeven id kon niet worden gevonden.");
+            if (i == null) return NotFound("itemMetIdNietGevonden");
             return i;
         }
 
@@ -44,7 +44,7 @@ namespace ananauAPI.Controllers
         public ActionResult<Item> GetItemByName(string naam)
         {
             Item i = _itemRepository.GetByName(naam);
-            if (i == null) return BadRequest("Het item met opgegeven naam kon niet worden gevonden.");
+            if (i == null) return BadRequest("itemMetIdNietGevonden");
             return i;
         }
 
@@ -62,7 +62,7 @@ namespace ananauAPI.Controllers
             Item g = _itemRepository.GetBy(id);
             if (g == null)
             {
-                return NotFound("Het item met opgegeven id kon niet worden gevonden.");
+                return NotFound("itemMetIdNietGevonden");
             }
             _itemRepository.Delete(g);
             _itemRepository.SaveChanges();
@@ -85,7 +85,7 @@ namespace ananauAPI.Controllers
                 filter.ToegevoegdOpSorterenASC && filter.ToegevoegdOpSorterenDESC
                 )
             {
-                return BadRequest("Er kan maar op 1 item tergelijk worden gefilterd!");
+                return BadRequest("eenItemTergelijk");
             }
 
             if (filter.NaamSorterenDESC)
@@ -153,7 +153,7 @@ namespace ananauAPI.Controllers
         {
             if (!item.Id.Equals(id))
             {
-               return BadRequest("id's komen niet overeen!");
+               return BadRequest("idsKomenNietOvereen");
             }
 
             Item i = _itemRepository.GetBy(id);
@@ -161,7 +161,7 @@ namespace ananauAPI.Controllers
             {
                 if(_itemRepository.GetByName(item.Naam) != null)
                 {
-                    return BadRequest("Er bestaat al een item met deze naam: kies een andere naam!");
+                    return BadRequest("kiesAndereNaam");
                 }
 
             } 
@@ -174,7 +174,7 @@ namespace ananauAPI.Controllers
                 }
                 else
                 {
-                    return BadRequest("Items die uitgeleend zijn kunnen niet gearchiveerd worden!");
+                    return BadRequest("uitegeleendItemsNietArchiveren");
                 }
             }
             else
@@ -192,7 +192,7 @@ namespace ananauAPI.Controllers
         {
             if (_itemRepository.GetByName(itemDto.Naam) != null)
             {
-                return BadRequest("Er betaat al een item met deze naam! Geef een andere naam op!");
+                return BadRequest("kiesAndereNaam");
             }
             Item item = new Item(itemDto.Naam);
             item.Materiaal = itemDto.Materiaal;

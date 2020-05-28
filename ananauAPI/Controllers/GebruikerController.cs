@@ -63,13 +63,12 @@ namespace ananauAPI.Controllers
                 }
                 else
                 {
-                    return BadRequest("Dit wachtwoord is onjuist.");
+                    return BadRequest("wachtwoordOnjuist");
                 }
             }
             else
             {
-                return BadRequest("Dit ema" +
-                    "il adres is onjuist.");
+                return BadRequest("emailOnjuist");
             }
         }
 

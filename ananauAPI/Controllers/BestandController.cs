@@ -27,19 +27,17 @@ namespace ananauAPI.Controllers
 
         public BestandController(IApplicatieRepository applicatieRepository)
         {
-            aanvaardeBestandExtenties = new string[] { "image/png", "image/jpeg", "image/jpg" };
+            aanvaardeBestandExtenties = new string[] { "image/png", "image/jpeg", "image/jpg", "application/pdf" };
             _applicatieRepository = applicatieRepository;
 
         }
-
-        [HttpGet(folder]
 
         [HttpPost("{folder}/{bestandNaam}")]
         public async Task<ActionResult> UploadBestand(string folder, string bestandNaam, [FromForm(Name = "bestand")]IFormFile bestand)
         {
             if (!aanvaardeBestandExtenties.Contains(bestand.ContentType))
             {
-                return BadRequest();
+                return BadRequest("Er is een extentie die niet aanvaard wordt!");
             }
             var folderPad = Path.Combine(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), folder);
             string naam = "";
@@ -86,35 +84,51 @@ namespace ananauAPI.Controllers
             return Ok();
         }
 
-        [HttpGet("{applicatieId}/{folder}/{bestandNaam}")]
-        public IActionResult Get(string applicatieId, string folder, string bestandNaam)
+        [HttpGet("folderInfo/{folder}")]
+        public ActionResult<List<String>> GetNamen(string applicatieId, string folder)
         {
-            bestandNaam = bestandNaam.ToLower();
             Applicatie applicatie = _applicatieRepository.GetBy(applicatieId);
             if (applicatie == null) return BadRequest("De applicatie bestaat niet!");
 
             DirectoryInfo d = new DirectoryInfo(Path.Combine(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), folder));
-            FileInfo[] Files = null;
-            if (bestandNaam.Contains("reispaspoort"))
-            {
-                Files = d.GetFiles("reispaspoort*"); //Getting Text files
-            }
-            else if (bestandNaam.Contains("attest"))
-            {
-                Files = d.GetFiles("attest*");
-            }
-            else if (bestandNaam.Contains("diploma"))
-            {
-                Files = d.GetFiles("diploma*");
-            }
+            List<String> namen = d.GetFiles().Select(t => t.Name.ToString()).OrderBy(t => t).ToList();
+            return namen;
+        }
+
+        
+        [HttpGet("{applicatieId}/{bestandNaam}")]
+        public IActionResult Get(string applicatieId, string bestandNaam)
+        {
+            bestandNaam = bestandNaam.ToLower();
+            Applicatie applicatie = _applicatieRepository.GetBy(applicatieId);
+            if (applicatie == null) return BadRequest("De applicatie bestaat niet!");
+            var folderPad = Path.Combine(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), applicatie.Email);
+            DirectoryInfo d = new DirectoryInfo(Path.Combine(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), applicatie.Email));
             string naam = "";
-            foreach (FileInfo file in Files)
+            FileInfo[] Files = null;
+            if (Directory.Exists(folderPad))
             {
-                naam = file.Name;
+                if (bestandNaam.Contains("reispaspoort"))
+                {
+                    Files = d.GetFiles("reispaspoort*"); //Getting Text files
+                }
+                else if (bestandNaam.Contains("attest"))
+                {
+                    Files = d.GetFiles("attest*");
+                }
+                else if (bestandNaam.Contains("diploma"))
+                {
+                    Files = d.GetFiles("diploma*");
+                }
+                
+                foreach (FileInfo file in Files)
+                {
+                    naam = file.Name;
+                }
             }
 
             Byte[] b;
-            var folderPad = Path.Combine(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), folder);
+            
             if (!Directory.Exists(folderPad))
             {
                 return NoContent();
