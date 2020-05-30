@@ -39,7 +39,5 @@ namespace ananauAPI
         //       }
         //    ).UseStartup<Startup>()
         //     .Build();
-
-        //private static string GetKeyVaultEndpoint() => "https://kolveniershof-0-kv.vault.azure.net";
     }
 }

@@ -42,9 +42,9 @@ namespace ananauAPI
             services.AddOpenApiDocument(c =>
             {
                 c.DocumentName = "apidocs";
-                c.Title = "Kolveniershof API";
+                c.Title = "Ananau API";
                 c.Version = "v1";
-                c.Description = "The Kolveniershof API documentation description.";
+                c.Description = "The Ananau API documentation description.";
                 c.DocumentProcessors.Add(new SecurityDefinitionAppender("JWT Token", new SwaggerSecurityScheme
                 {
                     Type = SwaggerSecuritySchemeType.ApiKey,
@@ -146,7 +146,7 @@ namespace ananauAPI
             app.UseMvc();
             app.UseSwaggerUi3();
             app.UseSwagger();
-            dataInitialiser.InitializeData().Wait();
+            //dataInitialiser.InitializeData().Wait();
         }
     }
 }
