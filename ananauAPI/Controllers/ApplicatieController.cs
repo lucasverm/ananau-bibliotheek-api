@@ -23,10 +23,10 @@ namespace ananauAPI.Controllers
         public ApplicatieController(IApplicatieRepository applicatieRepository)
         {
             _applicatieRepository = applicatieRepository;
-            //https://app.mailgun.com/
-            //lucasvermeulen@gmail.com - 4951927700
-            this.smtpClient = new SmtpClient("smtp.mailgun.org", 587);
-            this.smtpClient.Credentials = new System.Net.NetworkCredential("postmaster@sandbox527ab39af7e14efe87d1c4fa0defd693.mailgun.org", "9855808fce47a7a2116caadb321cd308-7fba8a4e-dd172dfa");
+            //https://gmx.com/
+            //lucasverm@gmx.com - test123!
+            this.smtpClient = new SmtpClient("mail.gmx.com", 587);
+            this.smtpClient.Credentials = new System.Net.NetworkCredential("lucasverm@gmx.com", "test123!");
             this.smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
             this.smtpClient.EnableSsl = true;
         }
@@ -119,10 +119,10 @@ namespace ananauAPI.Controllers
             {
                 try
                 {
-                    this.smtpClient.Send("lucas@ananau.org", "info@ananau.org", "Nieuwe Applicatie",
+                    this.smtpClient.Send("lucasverm@gmx.com", "info@ananau.org", "Nieuwe Applicatie",
                         "Beste,\n" +
                         "Er werd net een nieuwe applicatie ingevuld door " + a.Voornaam + " " + a.Achternaam + " \n" +
-                        "De applicatie kan bekeken worden op http://localhost:4200/applicatie-bekijken/" + a.Id + "\n"
+                        "De applicatie kan bekeken worden op http://https://ananau-aanmeld-systeem.netlify.app/applicatie-bekijken/" + a.Id + "\n"
                         + "Met vriendelijke groet, \n" +
                         "Webmaster Lucas!");
                 }catch (Exception e)
