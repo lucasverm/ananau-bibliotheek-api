@@ -13,7 +13,7 @@ namespace ananauAPI.DTO
         public Boolean Gearchiveerd { get; set; }
         public string Materiaal { get; set; }
         public string Merk { get; set; }
-        public DateTime AankoopDatum { get; set; }
+        public DateTime? AankoopDatum { get; set; }
         public string Inhoud { get; set; }
         public ItemCategorie Categorie { get; set; }
         public ItemDTO()
@@ -24,6 +24,11 @@ namespace ananauAPI.DTO
         {
             Id = i.Id;
             Naam = i.Naam;
+            Merk = i.Merk;
+            Inhoud = i.Inhoud;
+            Materiaal = i.Materiaal;
+            Categorie = i.Categorie;
+            AankoopDatum = i.AankoopDatum;
 
         }
     }

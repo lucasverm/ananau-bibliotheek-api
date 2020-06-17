@@ -166,6 +166,11 @@ namespace ananauAPI.Controllers
 
             } 
             i.Naam = item.Naam;
+            i.Merk = item.Merk;
+            i.Materiaal = item.Materiaal;
+            i.Inhoud = item.Inhoud;
+            i.AankoopDatum = item.AankoopDatum;
+            i.Categorie = item.Categorie;
             if (item.Gearchiveerd)
             {
                 if (i.Beschikbaar)
